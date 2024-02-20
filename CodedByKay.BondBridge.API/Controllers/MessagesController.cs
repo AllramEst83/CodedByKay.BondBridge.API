@@ -15,7 +15,7 @@ namespace CodedByKay.BondBridge.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{userId}", Name = "GetMessagesByUserId")]
+        [HttpGet("{userId}", Name = "GetMessages")]
         public IEnumerable<Message> Get(Guid userId)
         {
             return new List<Message>
