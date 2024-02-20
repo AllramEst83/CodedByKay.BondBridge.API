@@ -16,24 +16,24 @@ namespace CodedByKay.BondBridge.API.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetMessagesByUserId")]
-        public IEnumerable<Messages> Get(Guid userId)
+        public IEnumerable<Message> Get(Guid userId)
         {
-            return new List<Messages>
+            return new List<Message>
             {
                 new() {
-                    Message = "Hello there! What are you doing?",
+                    MessageContent = "Hello there! What are you doing?",
                     MessageId = Guid.NewGuid(),
                     UserId = userId,
                 },
                 new()
                 {
-                    Message = "Just checking in to see how you're doing.",
+                    MessageContent = "Just checking in to see how you're doing.",
                     MessageId = Guid.NewGuid(),
                     UserId = userId,
                 },
                 new()
                 {
-                    Message = "Don't forget our meeting tomorrow!",
+                    MessageContent = "Don't forget our meeting tomorrow!",
                     MessageId = Guid.NewGuid(),
                     UserId = userId,
                 }
