@@ -1,3 +1,5 @@
+using CodedByKay.BondBridge.JwtAuth.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodedByKay.BondBridge.API.Controllers

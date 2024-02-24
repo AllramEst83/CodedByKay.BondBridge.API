@@ -4,3 +4,16 @@ GET {{CodedByKay.BondBridge.API_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST https://localhost:7277/api/Authentication/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "kay@codedbykay.se",
+  "password": "Rumpa2024!"
+}
+###
+
+GET https://localhost:7277/api/Authentication/admintest HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXlAY29kZWRieWtheS5zZSIsInJvbCI6ImFkbWluX2FjY2VzcyIsImV4cCI6MTcwODc5MTQwMiwiaXNzIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlIiwiYXVkIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlLkNsaWVudCJ9.sqwea6vMXmxvYMMbLRhtsOzvol_38cL2sttnaGbpoYI
