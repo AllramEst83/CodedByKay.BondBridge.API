@@ -1,12 +1,19 @@
-﻿using CodedByKay.BondBridge.API.Models;
-using CodedByKay.BondBridge.JwtAuth;
-using CodedByKay.BondBridge.JwtAuth.Models;
+﻿using CodedByKay.BondBridge.API.Exstensions;
+using CodedByKay.BondBridge.API.Model;
+using CodedByKay.BondBridge.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime;
 
 namespace CodedByKay.BondBridge.API.Controllers
 {
+
+    
+    /*
+     - Add exception messages
+     - Add global exception message on forbbiden JWT token
+    - Encrypt sending of toke/all messages to the server and back
+     */
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
@@ -27,8 +34,9 @@ namespace CodedByKay.BondBridge.API.Controllers
 
             if (isValidUser)
             {
+                var roles = new List<string>() { TokenValidationConstants.Roles.AdminAccess, TokenValidationConstants.Roles.CommonUserAccess };
                 // Assume GenerateToken is a method that generates a JWT token.
-                var token = JwtAuthExtension.GenerateToken(_applicationSettings.JWTSIGNINGKEY, _applicationSettings.JWTISSUER, _applicationSettings.JWTAUDIENCE, userLogin.Email, TokenValidationConstants.Roles.AdminAccess);
+                var token = JwtAuthExtension.GenerateToken(_applicationSettings.JWTSIGNINGKEY, _applicationSettings.JWTISSUER, _applicationSettings.JWTAUDIENCE, userLogin.Email, roles);
                 return Ok(new { Token = token });
             }
             else
@@ -44,10 +52,17 @@ namespace CodedByKay.BondBridge.API.Controllers
         }
 
         [Authorize(Policy = TokenValidationConstants.Policies.CodedByKayBondBridgeApiAdmin)]
-        [HttpGet("admintest")]
-        public IActionResult Admintest()
+        [HttpGet("adminrequesttest")]
+        public IActionResult AdminRequestTest()
         {
-            return Ok("Nice!");
+            return Ok(new { message = "You are a admin user!" });
+        }
+
+        [Authorize(Policy = TokenValidationConstants.Policies.CodedByKayBondBridgeApiCommonUser)]
+        [HttpGet("userrequesttest")]
+        public IActionResult UserRequestTest()
+        {
+            return Ok(new { message = "You are a common user!" });
         }
     }
 }
