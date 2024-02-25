@@ -1,4 +1,4 @@
-﻿using CodedByKay.BondBridge.API.Model;
+﻿using CodedByKay.BondBridge.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -82,11 +82,12 @@ namespace CodedByKay.BondBridge.API.Exstensions
         /// <remarks>
         /// Generates a JWT token that includes claims for the user's username and roles. The token is signed with the provided secret key.
         /// </remarks>
-        public static string GenerateToken(string secretKey, string issuer, string audience, string username, List<string> roles)
+        public static string GenerateToken(string secretKey, string issuer, string audience, string username, List<string> roles, string userId)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username)
+                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(ClaimTypes.NameIdentifier, userId)
             };
 
             foreach (var role in roles)
@@ -121,7 +122,29 @@ namespace CodedByKay.BondBridge.API.Exstensions
             {
                 rng.GetBytes(randomBytes);
             }
-            return Convert.ToBase64String(randomBytes); // Convert to Base64 for easier use in configurations
+            return Convert.ToBase64String(randomBytes);
+        }
+
+        public static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32]; // 256 bits
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+
+        public static string GetUserIdFromExpiredAccessToken(string accessToken)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadToken(accessToken) as JwtSecurityToken;
+
+            var userIdClaim = securityToken?.Claims
+                                            .FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier);
+
+            return userIdClaim?.Value;
         }
     }
 }

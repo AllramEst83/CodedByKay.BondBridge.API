@@ -5,11 +5,11 @@ Accept: application/json
 
 ###
 
-POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/login HTTP/1.1
+POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/signin HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "kay@codedbykay.se",
+  "email": "kaywib@gmail.com",
   "password": "Rumpa2024!"
 }
 ###
@@ -23,3 +23,41 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXlAY29kZ
 GET {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/userrequesttest HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXlAY29kZWRieWtheS5zZSIsInJvbCI6WyJhZG1pbl9hY2Nlc3MiLCJjb21tb25fdXNlcl9hY2Nlc3MiXSwiZXhwIjoxNzA5NDY2NTU5LCJpc3MiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UiLCJhdWQiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UuQ2xpZW50In0.sqSYDvVt5BWz4lWD_l7oCgGd3LHsxU62RsM0R4pQlts
+
+###
+
+POST {{CodedByKay.BondBridge.API_HostAddress}}/api/ApplicationManager/adduser HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXlAY29kZWRieWtheS5zZSIsInJvbCI6WyJhZG1pbl9hY2Nlc3MiLCJjb21tb25fdXNlcl9hY2Nlc3MiXSwiZXhwIjoxNzA5NDY2NTU5LCJpc3MiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UiLCJhdWQiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UuQ2xpZW50In0.sqSYDvVt5BWz4lWD_l7oCgGd3LHsxU62RsM0R4pQlts
+
+{
+  "email": "kaywib@gmail.com",
+  "password": "Rumpa2024!"
+}
+### 
+
+POST {{CodedByKay.BondBridge.API_HostAddress}}/api/ApplicationManager/addrole/common_user_access HTTP/1.1
+Content-Type: application/json
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXlAY29kZWRieWtheS5zZSIsInJvbCI6WyJhZG1pbl9hY2Nlc3MiLCJjb21tb25fdXNlcl9hY2Nlc3MiXSwiZXhwIjoxNzA5NDY2NTU5LCJpc3MiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UiLCJhdWQiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UuQ2xpZW50In0.sqSYDvVt5BWz4lWD_l7oCgGd3LHsxU62RsM0R4pQlts
+
+### 
+
+POST {{CodedByKay.BondBridge.API_HostAddress}}/api/ApplicationManager/addroletouser HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXlAY29kZWRieWtheS5zZSIsInJvbCI6WyJhZG1pbl9hY2Nlc3MiLCJjb21tb25fdXNlcl9hY2Nlc3MiXSwiZXhwIjoxNzA5NDY2NTU5LCJpc3MiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UiLCJhdWQiOiJDb2RlZEJ5S2F5LkJvbmRCcmlkZ2UuQ2xpZW50In0.sqSYDvVt5BWz4lWD_l7oCgGd3LHsxU62RsM0R4pQlts
+
+{
+  "userId": "d666c1b2-94fa-4f18-bf5b-8025696f604f",
+  "role": "admin_access"
+}
+### 
+
+POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/refreshtoken HTTP/1.1
+Content-Type: application/json
+
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXl3aWJAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJkNjY2YzFiMi05NGZhLTRmMTgtYmY1Yi04MDI1Njk2ZjYwNGYiLCJyb2wiOlsiY29tbW9uX3VzZXJfYWNjZXNzIiwiYWRtaW5fYWNjZXNzIl0sImV4cCI6MTcwOTUwMTE3NywiaXNzIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlIiwiYXVkIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlLkNsaWVudCJ9.82nfOOmElfiy-VSJRXxBj4z6xSnQhpxlHIuvsZh-9hU",
+  "refreshToken": "6woMVsC+BLxhb4ZqP02GnYUgmd/NG3nfyukZhUmMTKE="
+}
+
+### 

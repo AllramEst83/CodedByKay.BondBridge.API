@@ -1,5 +1,9 @@
+using CodedByKay.BondBridge.API.DBContext;
 using CodedByKay.BondBridge.API.Exstensions;
+using CodedByKay.BondBridge.API.Middleware;
 using CodedByKay.BondBridge.API.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +22,19 @@ var jwtAudience = applicationSettings.JWTAUDIENCE;
 
 // Add services to the container.
 var services = builder.Services;
+
+services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.User.RequireUniqueEmail = true;
+    // Other configuration options
+})
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services
     .AddJwtAuthentication(jwtSigningKey, jwtIssuer, jwtAudience)
@@ -72,8 +89,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

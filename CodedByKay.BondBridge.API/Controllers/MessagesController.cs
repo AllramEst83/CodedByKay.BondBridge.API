@@ -1,4 +1,4 @@
-using CodedByKay.BondBridge.API.Model;
+using CodedByKay.BondBridge.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodedByKay.BondBridge.API.Controllers
