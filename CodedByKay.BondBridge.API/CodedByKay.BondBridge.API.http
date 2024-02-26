@@ -1,6 +1,0 @@
-@CodedByKay.BondBridge.API_HostAddress = http://localhost:5049
-
-GET {{CodedByKay.BondBridge.API_HostAddress}}/api/messages/get/0dbe474f-89ba-4c2c-bf58-c7e05eb60629
-Accept: application/json
-
-###

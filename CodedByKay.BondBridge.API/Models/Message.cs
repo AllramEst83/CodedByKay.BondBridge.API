@@ -1,4 +1,4 @@
-﻿namespace CodedByKay.BondBridge.API.Model
+﻿namespace CodedByKay.BondBridge.API.Models
 {
     public class Message
     {
