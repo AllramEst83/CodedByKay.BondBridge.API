@@ -1,11 +1,8 @@
-﻿using CodedByKay.BondBridge.API.DBContext;
-using CodedByKay.BondBridge.API.Exstensions;
+﻿using CodedByKay.BondBridge.API.Exstensions;
 using CodedByKay.BondBridge.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using static CodedByKay.BondBridge.API.Models.TokenValidationConstants;
 
 namespace CodedByKay.BondBridge.API.Controllers
@@ -18,13 +15,14 @@ namespace CodedByKay.BondBridge.API.Controllers
         private readonly ApplicationSettings _applicationSettings;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        public AuthenticationController(ApplicationSettings applicationSettings, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AuthenticationController(
+            ApplicationSettings applicationSettings, 
+            UserManager<IdentityUser> userManager, 
+            SignInManager<IdentityUser> signInManager)
         {
             _applicationSettings = applicationSettings;
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
         }
 
         [AllowAnonymous]
@@ -69,7 +67,8 @@ namespace CodedByKay.BondBridge.API.Controllers
             return Unauthorized();
         }
 
-
+        [Authorize(Policy = Policies.CodedByKayBondBridgeApiAdmin)]
+        [Authorize(Policy = Policies.CodedByKayBondBridgeApiCommonUser)]
         [HttpPost("refreshtoken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRefreshRequest model)
         {

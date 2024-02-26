@@ -3,6 +3,7 @@ using CodedByKay.BondBridge.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace CodedByKay.BondBridge.API.Controllers
 {
@@ -14,8 +15,8 @@ namespace CodedByKay.BondBridge.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public ApplicationManagerController(
-            ApplicationDbContext context, 
-            UserManager<IdentityUser> userManager, 
+            ApplicationDbContext context,
+            UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {
             _context = context;
@@ -57,7 +58,7 @@ namespace CodedByKay.BondBridge.API.Controllers
             return Ok(new { message = "Role has been created." });
         }
 
-        [Authorize(Policy = TokenValidationConstants.Policies.CodedByKayBondBridgeApiAdmin)]
+        [AllowAnonymous]
         [HttpPost("adduser")]
         public async Task<IActionResult> AddUser([FromBody] AddUserModel model)
         {
@@ -65,19 +66,28 @@ namespace CodedByKay.BondBridge.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            //Transform data
-            //Check email validity
+
+            // Check email validity (format and uniqueness)
+            if (!new EmailAddressAttribute().IsValid(model.Email))
+            {
+                return BadRequest("Email format is invalid.");
+            }
+
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                return BadRequest("Email is already in use.");
+            }
 
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
-                // Return an error response if user creation failed, detailing why
                 return BadRequest(result.Errors);
             }
 
-            // Check if the role exists, create if it doesn't
+            // Ensure the common user access role exists
             if (!await _roleManager.RoleExistsAsync(TokenValidationConstants.Roles.CommonUserAccess))
             {
                 await _roleManager.CreateAsync(new IdentityRole(TokenValidationConstants.Roles.CommonUserAccess));
@@ -88,12 +98,14 @@ namespace CodedByKay.BondBridge.API.Controllers
 
             if (!roleResult.Succeeded)
             {
-                // Handle errors (e.g., role assignment failed)
+                await _userManager.DeleteAsync(user);
+
                 return BadRequest(roleResult.Errors);
             }
 
             return Ok(new { message = "User has been created and assigned a role." });
         }
+
 
         [Authorize(Policy = TokenValidationConstants.Policies.CodedByKayBondBridgeApiAdmin)]
         [HttpPost("addroletouser")]
@@ -182,23 +194,31 @@ namespace CodedByKay.BondBridge.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            //Transform data
-
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
             {
                 return NotFound("User does not exist");
             }
 
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Count > 0)
+            {
+                var removalResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+                if (!removalResult.Succeeded)
+                {
+                    return BadRequest(removalResult.Errors);
+                }
+            }
+
             var userResult = await _userManager.DeleteAsync(user);
             if (!userResult.Succeeded)
             {
-                // Handle errors (e.g., role assignment failed)
                 return BadRequest(userResult.Errors);
             }
 
             return Ok(new { message = "God bless! User has been deleted." });
         }
+
 
         [Authorize(Policy = TokenValidationConstants.Policies.CodedByKayBondBridgeApiAdmin)]
         [HttpPost("deleterole")]
@@ -209,12 +229,26 @@ namespace CodedByKay.BondBridge.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            //Transform data
+            // Transform data
 
             var role = await _roleManager.FindByNameAsync(model.Role);
             if (role == null)
             {
                 return BadRequest("Role does not exist.");
+            }
+
+            if (role.Name == null)
+            {
+                return BadRequest("Role name cannot be null.");
+            }
+
+            var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
+            if (usersInRole.Count > 0)
+            {
+                foreach (var user in usersInRole)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, role.Name);
+                }
             }
 
             var roleResult = await _roleManager.DeleteAsync(role);
@@ -225,5 +259,6 @@ namespace CodedByKay.BondBridge.API.Controllers
 
             return Ok(new { message = "God bless! Role has been deleted." });
         }
+
     }
 }

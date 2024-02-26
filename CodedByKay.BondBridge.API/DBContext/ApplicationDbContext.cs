@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using CodedByKay.BondBridge.API.Models.DBModels;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodedByKay.BondBridge.API.DBContext
@@ -10,5 +11,6 @@ namespace CodedByKay.BondBridge.API.DBContext
         {
         }
 
+        public DbSet<Log> Logs { get; set; }
     }
 }

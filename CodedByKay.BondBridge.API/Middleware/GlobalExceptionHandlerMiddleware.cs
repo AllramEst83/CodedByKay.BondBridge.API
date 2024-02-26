@@ -1,4 +1,11 @@
-﻿using CodedByKay.BondBridge.API.Models;
+﻿using CodedByKay.BondBridge.API.DBContext;
+using CodedByKay.BondBridge.API.Models;
+using CodedByKay.BondBridge.API.Models.DBModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace CodedByKay.BondBridge.API.Middleware
 {
@@ -6,6 +13,8 @@ namespace CodedByKay.BondBridge.API.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger;
+
+        // Removed ApplicationDbContext from constructor injection
 
         public GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
         {
@@ -22,6 +31,23 @@ namespace CodedByKay.BondBridge.API.Middleware
             catch (Exception ex)
             {
                 _logger.LogError($"Unhandled exception: {ex}");
+
+                // Resolve ApplicationDbContext from the scope
+                using (var scope = context.RequestServices.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                    var logEntry = new Log
+                    {
+                        Level = "Error",
+                        Message = ex.Message,
+                        ExceptionMessage = ex.ToString(),
+                        StackTrace = ex.StackTrace ?? "No stacktrace available."
+                    };
+                    dbContext.Logs.Add(logEntry);
+                    await dbContext.SaveChangesAsync();
+                }
+
                 await HandleExceptionAsync(context, ex);
             }
         }
