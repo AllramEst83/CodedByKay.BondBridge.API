@@ -1,7 +1,10 @@
-﻿namespace CodedByKay.BondBridge.API.Models
+﻿using CodedByKay.BondBridge.API.Attributes;
+
+namespace CodedByKay.BondBridge.API.Models
 {
     public class SignoutModel
     {
-        public string UserId { get; set; }
+        [NotDefaultGuid(ErrorMessage = "UserId must be a non-default GUID.")]
+        public Guid UserId { get; set; }
     }
 }
