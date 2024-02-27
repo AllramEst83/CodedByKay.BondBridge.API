@@ -1,5 +1,5 @@
 @CodedByKay.BondBridge.API_HostAddress = https://localhost:7277
-@customHeader = S8?2]+r#xECewmsion}y
+@customHeader = <custom header value>
 
 
 GET {{CodedByKay.BondBridge.API_HostAddress}} HTTP/1.1
