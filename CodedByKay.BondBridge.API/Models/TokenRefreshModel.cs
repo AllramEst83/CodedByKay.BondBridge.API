@@ -2,7 +2,7 @@
 
 namespace CodedByKay.BondBridge.API.Models
 {
-    public class TokenRefreshRequest
+    public class TokenRefreshModel
     {
         [Required(ErrorMessage = "AccessToken is required.")]
         [RegularExpression(@"^\S(.*\S)?$", ErrorMessage = "AccessTokencannot be whitespace.")]

@@ -2,7 +2,7 @@
 
 namespace CodedByKay.BondBridge.API.Models
 {
-    public class UserSigninModel
+    public class SigninModel
     {
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]

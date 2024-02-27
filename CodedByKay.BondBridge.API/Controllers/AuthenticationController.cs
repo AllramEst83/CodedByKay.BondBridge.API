@@ -28,7 +28,7 @@ namespace CodedByKay.BondBridge.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("signin")]
-        public async Task<IActionResult> Signin([FromBody] UserSigninModel userLogin)
+        public async Task<IActionResult> Signin([FromBody] SigninModel userLogin)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +71,7 @@ namespace CodedByKay.BondBridge.API.Controllers
         [Authorize(Policy = Policies.CodedByKayBondBridgeApiAdmin)]
         [Authorize(Policy = Policies.CodedByKayBondBridgeApiCommonUser)]
         [HttpPost("refreshtoken")]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenRefreshRequest model)
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRefreshModel model)
         {
             if (!ModelState.IsValid)
             {

@@ -1,8 +1,8 @@
 ﻿@CodedByKay.BondBridge.API_HostAddress = https://localhost:7277
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXl3aWJAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiNWIxZGJhMi03ODE3LTQ5NDUtYjY0Ni0yY2U1NjhiZmIxZGMiLCJyb2wiOlsiYWRtaW5fYWNjZXNzIiwiY29tbW9uX3VzZXJfYWNjZXNzIl0sImV4cCI6MTcwOTYzMjg0OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzI3NyIsImF1ZCI6ImNvbS5jb2RlZGJ5a2F5LmJvbmRicmlkZ2UuY2xpZW50In0.VhKaCfXGfFaqWNRr3vNHitBNJ59sOx5Ajjl2cIq-Cr0
-@role = "admin_access"
-@userId = "78949f35-b9aa-4693-8189-608242e9c956"
-@customHeader = S8?2]+r#xECewmsion}y
+@accessToken = <accessToken>
+@role = "<role>"
+@userId = <userId>
+@customHeader = <custom header value>
 
 GET {{CodedByKay.BondBridge.API_HostAddress}}/api/UserManager/ensurecreated HTTP/1.1
 Content-Type: application/json
@@ -22,11 +22,14 @@ CodedByKay-BondBridge-header: {{customHeader}}
 }
 ### 
 
-POST {{CodedByKay.BondBridge.API_HostAddress}}/api/UserManager/addrole/{{role}} HTTP/1.1
+POST {{CodedByKay.BondBridge.API_HostAddress}}/api/UserManager/addrole HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 CodedByKay-BondBridge-header: {{customHeader}}
 
+{
+  "roleNAme": {{role}}
+}
 ### 
 
 POST {{CodedByKay.BondBridge.API_HostAddress}}/api/UserManager/addroletouser HTTP/1.1
