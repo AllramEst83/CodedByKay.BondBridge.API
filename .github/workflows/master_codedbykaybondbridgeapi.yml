@@ -21,9 +21,10 @@ jobs:
         with:
           files: 'CodedByKay.BondBridge.API/appsettings.json'
         env:
-          ApplicationSettings.JWTAUDIENCE: ${{ secrets.JWTAUDIENCE }}
-          ApplicationSettings.JWTISSUER: ${{ secrets.JWTISSUER }}
-          ApplicationSettings.JWTSIGNINGKEY: ${{ secrets.JWTSIGNINGKEY }}       
+          ApplicationSettings.JwtAudience: ${{ secrets.JWTAUDIENCE }}
+          ApplicationSettings.JwtIssuer: ${{ secrets.JWTISSUER }}
+          ApplicationSettings.JwtSigningKey: ${{ secrets.JWTSIGNINGKEY }}       
+          ApplicationSettings.CustomHeader: ${{ secrets.CUSTOMHEADER }}     
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
