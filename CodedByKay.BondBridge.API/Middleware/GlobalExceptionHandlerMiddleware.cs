@@ -1,11 +1,6 @@
 ﻿using CodedByKay.BondBridge.API.DBContext;
 using CodedByKay.BondBridge.API.Models;
 using CodedByKay.BondBridge.API.Models.DBModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace CodedByKay.BondBridge.API.Middleware
 {
