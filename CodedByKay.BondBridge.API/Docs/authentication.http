@@ -1,23 +1,28 @@
 @CodedByKay.BondBridge.API_HostAddress = https://localhost:7277
-@accessToken = <test>
+@refreshToken = <refreshToken>
+@accessToken = <accessToken>
+@customHeader = <custom header value>
 
 
 POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/signin HTTP/1.1
+CodedByKay-BondBridge-header: {{customHeader}}
 Content-Type: application/json
 
 {
-  "email": "kaywib@gmail.com",
-  "password": "Rumpa2024!"
+  "email": "<email>",
+  "password": "<password>"
 }
 ###
 
 POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/refreshtoken HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
+CodedByKay-BondBridge-header: {{customHeader}}
 
 {
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXl3aWJAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJkNjY2YzFiMi05NGZhLTRmMTgtYmY1Yi04MDI1Njk2ZjYwNGYiLCJyb2wiOlsiY29tbW9uX3VzZXJfYWNjZXNzIiwiYWRtaW5fYWNjZXNzIl0sImV4cCI6MTcwOTUwMTE3NywiaXNzIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlIiwiYXVkIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlLkNsaWVudCJ9.82nfOOmElfiy-VSJRXxBj4z6xSnQhpxlHIuvsZh-9hU",
-  "refreshToken": "6woMVsC+BLxhb4ZqP02GnYUgmd/NG3nfyukZhUmMTKE="
+  "accessToken": "{{accessToken}}",
+  "refreshToken": "{{refreshToken}}"
 }
+
 
 ### 
