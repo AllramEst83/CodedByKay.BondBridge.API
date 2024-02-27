@@ -125,6 +125,14 @@ namespace CodedByKay.BondBridge.API.Exstensions
             return Convert.ToBase64String(randomBytes);
         }
 
+        /// <summary>
+        /// Generates a secure random string to be used as a refresh token.
+        /// </summary>
+        /// <returns>A base64 encoded string representing a securely generated random value.</returns>
+        /// <remarks>
+        /// This method generates a 256-bit (32-byte) secure random number using a cryptographic random number generator (RNG).
+        /// It then converts this random number into a base64 string, which is suitable for use as a refresh token in authentication flows.
+        /// </remarks>
         public static string GenerateRefreshToken()
         {
             var randomNumber = new byte[32]; // 256 bits
@@ -135,16 +143,25 @@ namespace CodedByKay.BondBridge.API.Exstensions
             }
         }
 
-
+        /// <summary>
+        /// Extracts the user ID from an expired JWT access token.
+        /// </summary>
+        /// <param name="accessToken">The JWT access token from which the user ID should be extracted.</param>
+        /// <returns>The user ID extracted from the token.</returns>
+        /// <exception cref="NullReferenceException">Thrown when the user ID claim cannot be found in the token.</exception>
+        /// <remarks>
+        /// This method decodes the JWT access token without validating its signature or expiration,
+        /// specifically to extract the user ID from expired tokens. It assumes the token contains a NameIdentifier claim,
+        /// which is used to store the user ID. If the claim is not found, a NullReferenceException is thrown.
+        /// </remarks>
         public static string GetUserIdFromExpiredAccessToken(string accessToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.ReadToken(accessToken) as JwtSecurityToken;
 
-            var userIdClaim = securityToken?.Claims
-                                            .FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier);
+            var userIdClaim = securityToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier);
 
-            return userIdClaim?.Value;
+            return userIdClaim?.Value ?? throw new NullReferenceException("user claim value can not be null.");
         }
     }
 }

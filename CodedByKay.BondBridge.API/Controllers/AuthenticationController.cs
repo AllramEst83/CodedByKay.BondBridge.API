@@ -3,6 +3,7 @@ using CodedByKay.BondBridge.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using static CodedByKay.BondBridge.API.Models.TokenValidationConstants;
 
 namespace CodedByKay.BondBridge.API.Controllers
@@ -16,11 +17,11 @@ namespace CodedByKay.BondBridge.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         public AuthenticationController(
-            ApplicationSettings applicationSettings, 
-            UserManager<IdentityUser> userManager, 
+            IOptions<ApplicationSettings> applicationSettings,
+            UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager)
         {
-            _applicationSettings = applicationSettings;
+            _applicationSettings = applicationSettings.Value;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -50,7 +51,7 @@ namespace CodedByKay.BondBridge.API.Controllers
                 }
 
                 // Generate a new JWT access token
-                var accessToken = JwtAuthExtension.GenerateToken(_applicationSettings.JWTSIGNINGKEY, _applicationSettings.JWTISSUER, _applicationSettings.JWTAUDIENCE, userLogin.Email, [.. roles], user.Id);
+                var accessToken = JwtAuthExtension.GenerateToken(_applicationSettings.JwtSigningKey, _applicationSettings.JwtIssuer, _applicationSettings.JwtAudience, userLogin.Email, [.. roles], user.Id);
 
                 // Generate a new refresh token
                 var refreshToken = JwtAuthExtension.GenerateRefreshToken();
@@ -105,7 +106,7 @@ namespace CodedByKay.BondBridge.API.Controllers
             }
 
             // Generate new tokens
-            var newAccessToken = JwtAuthExtension.GenerateToken(_applicationSettings.JWTSIGNINGKEY, _applicationSettings.JWTISSUER, _applicationSettings.JWTAUDIENCE, user.Email, [.. roles], user.Id);
+            var newAccessToken = JwtAuthExtension.GenerateToken(_applicationSettings.JwtSigningKey, _applicationSettings.JwtIssuer, _applicationSettings.JwtAudience, user.Email, [.. roles], user.Id);
             var newRefreshToken = JwtAuthExtension.GenerateRefreshToken();
 
             // Update the stored refresh token with the new one

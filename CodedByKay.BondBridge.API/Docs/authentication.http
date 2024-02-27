@@ -1,19 +1,22 @@
 @CodedByKay.BondBridge.API_HostAddress = https://localhost:7277
-@accessToken = <test>
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXl3aWJAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiNWIxZGJhMi03ODE3LTQ5NDUtYjY0Ni0yY2U1NjhiZmIxZGMiLCJyb2wiOlsiYWRtaW5fYWNjZXNzIiwiY29tbW9uX3VzZXJfYWNjZXNzIl0sImV4cCI6MTcwOTYzMjg0OSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzI3NyIsImF1ZCI6ImNvbS5jb2RlZGJ5a2F5LmJvbmRicmlkZ2UuY2xpZW50In0.VhKaCfXGfFaqWNRr3vNHitBNJ59sOx5Ajjl2cIq-Cr0
+@customHeader = S8?2]+r#xECewmsion}y
 
 
 POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/signin HTTP/1.1
+CodedByKay-BondBridge-header: {{customHeader}}
 Content-Type: application/json
 
 {
-  "email": "kaywib@gmail.com",
-  "password": "Rumpa2024!"
+  "email": "<email>",
+  "password": "<password>"
 }
 ###
 
 POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/refreshtoken HTTP/1.1
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
+CodedByKay-BondBridge-header: {{customHeader}}
 
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYXl3aWJAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJkNjY2YzFiMi05NGZhLTRmMTgtYmY1Yi04MDI1Njk2ZjYwNGYiLCJyb2wiOlsiY29tbW9uX3VzZXJfYWNjZXNzIiwiYWRtaW5fYWNjZXNzIl0sImV4cCI6MTcwOTUwMTE3NywiaXNzIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlIiwiYXVkIjoiQ29kZWRCeUtheS5Cb25kQnJpZGdlLkNsaWVudCJ9.82nfOOmElfiy-VSJRXxBj4z6xSnQhpxlHIuvsZh-9hU",
