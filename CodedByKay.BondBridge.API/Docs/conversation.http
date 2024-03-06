@@ -1,0 +1,28 @@
+﻿@CodedByKay.BondBridge.API_HostAddress = https://localhost:7277
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+@groupId = YOUR_GROUP_ID_HERE
+@senderId = YOUR_SENDER_ID_HERE
+@messageId = YOUR_MESSAGE_ID_HERE
+@customHeader = YOUR_CUSTOM_HEADER_VALUE_HERE
+
+### Send Message
+POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Conversation/SendMessage HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+CodedByKay-BondBridge-header: {{customHeader}}
+
+{
+  "GroupId": "{{groupId}}",
+  "SenderId": "{{senderId}}",
+  "Content": "Hello, world!"
+}
+
+### Get Message History
+GET {{CodedByKay.BondBridge.API_HostAddress}}/api/Conversation/MessageHistory/{{groupId}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+CodedByKay-BondBridge-header: {{customHeader}}
+
+### Get Message
+GET {{CodedByKay.BondBridge.API_HostAddress}}/api/Conversation/GetMessage/{{messageId}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+CodedByKay-BondBridge-header: {{customHeader}}

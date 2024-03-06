@@ -1,8 +1,10 @@
 ﻿using CodedByKay.BondBridge.API.DBContext;
 using CodedByKay.BondBridge.API.Models;
+using CodedByKay.BondBridge.API.Models.DBModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace CodedByKay.BondBridge.API.Controllers
@@ -33,6 +35,15 @@ namespace CodedByKay.BondBridge.API.Controllers
             return Ok(new { message = "God bless! Databae has been cerated" });
         }
 
+        [Authorize(Policy = TokenValidationConstants.Policies.CodedByKayBondBridgeApiCommonUser)]
+        [HttpGet("getusers")]
+        public async Task<IActionResult> GetUsers()
+        {
+
+            var users = _context.ConversationUsers.ToList();
+
+            return Ok(users);
+        }
         /// <summary>
         /// Adds a new role to the application.
         /// </summary>
@@ -95,7 +106,7 @@ namespace CodedByKay.BondBridge.API.Controllers
         /// 
         /// This action allows anonymous access.
         /// </remarks>
-        [AllowAnonymous]
+        [Authorize(Policy = TokenValidationConstants.Policies.CodedByKayBondBridgeApiAppAccess)]
         [HttpPost("adduser")]
         public async Task<IActionResult> AddUser([FromBody] AddUserModel model)
         {
@@ -138,6 +149,17 @@ namespace CodedByKay.BondBridge.API.Controllers
 
                 return BadRequest(roleResult.Errors);
             }
+
+            var conversationUsers = new ConversationUser()
+            {
+                UserID = Guid.NewGuid(),
+                UserName = user.Email,
+                ImagePath = "placeholderimage.png"
+            };
+
+            await _context.ConversationUsers.AddAsync(conversationUsers);
+
+            await _context.SaveChangesAsync();
 
             return Ok(new { message = "God bless! User has been created and assigned a role." });
         }
@@ -299,6 +321,12 @@ namespace CodedByKay.BondBridge.API.Controllers
             if (!userResult.Succeeded)
             {
                 return BadRequest(userResult.Errors);
+            }
+
+            var conversationUsers = await _context.ConversationUsers.FirstOrDefaultAsync(x => x.UserName == user.UserName);
+            if (conversationUsers != null)
+            {
+                var result = _context.ConversationUsers.Remove(conversationUsers);
             }
 
             return Ok(new { message = "God bless! User has been deleted." });

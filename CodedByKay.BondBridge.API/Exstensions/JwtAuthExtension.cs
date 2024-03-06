@@ -65,6 +65,12 @@ namespace CodedByKay.BondBridge.API.Exstensions
                     policy => policy.RequireClaim(
                         TokenValidationConstants.Roles.Role,
                         TokenValidationConstants.Roles.CommonUserAccess));
+
+                options.AddPolicy(
+                 TokenValidationConstants.Policies.CodedByKayBondBridgeApiAppAccess,
+                 policy => policy.RequireClaim(
+                     TokenValidationConstants.Roles.Role,
+                     TokenValidationConstants.Roles.AppAccess));
             });
 
             return services;
@@ -82,7 +88,7 @@ namespace CodedByKay.BondBridge.API.Exstensions
         /// <remarks>
         /// Generates a JWT token that includes claims for the user's username and roles. The token is signed with the provided secret key.
         /// </remarks>
-        public static string GenerateToken(string secretKey, string issuer, string audience, string username, List<string> roles, string userId)
+        public static string GenerateToken(string secretKey, string issuer, string audience, string username, List<string> roles, string userId, bool generateTokenForApp = false)
         {
             var claims = new List<Claim>
             {
@@ -102,7 +108,7 @@ namespace CodedByKay.BondBridge.API.Exstensions
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(7),
+                expires: generateTokenForApp ? DateTime.Now.AddYears(1) : DateTime.Now.AddDays(7), // App = 1 year/User = 7 days
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

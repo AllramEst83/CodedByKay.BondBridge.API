@@ -51,7 +51,7 @@ namespace CodedByKay.BondBridge.API.Controllers
                 }
 
                 // Generate a new JWT access token
-                var accessToken = JwtAuthExtension.GenerateToken(_applicationSettings.JwtSigningKey, _applicationSettings.JwtIssuer, _applicationSettings.JwtAudience, userLogin.Email, [.. roles], user.Id);
+                var accessToken = JwtAuthExtension.GenerateToken(_applicationSettings.JwtSigningKey, _applicationSettings.JwtIssuer, _applicationSettings.JwtAudience, userLogin.Email, [.. roles], user.Id, userLogin.IsApp);
 
                 // Generate a new refresh token
                 var refreshToken = JwtAuthExtension.GenerateRefreshToken();

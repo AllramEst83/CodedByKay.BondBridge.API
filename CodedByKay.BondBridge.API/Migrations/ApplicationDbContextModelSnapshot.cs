@@ -22,6 +22,40 @@ namespace CodedByKay.BondBridge.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.ConversationUser", b =>
+                {
+                    b.Property<Guid>("UserID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserID");
+
+                    b.ToTable("ConversationUsers");
+                });
+
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.Group", b =>
+                {
+                    b.Property<Guid>("GroupID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GroupID");
+
+                    b.ToTable("Groups");
+                });
+
             modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.Log", b =>
                 {
                     b.Property<int>("Id")
@@ -52,6 +86,58 @@ namespace CodedByKay.BondBridge.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Logs");
+                });
+
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.Message", b =>
+                {
+                    b.Property<Guid>("MessageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MessageText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MessageID");
+
+                    b.HasIndex("GroupID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.UserGroup", b =>
+                {
+                    b.Property<Guid>("UserGroupID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ConversationUserUserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserGroupID");
+
+                    b.HasIndex("ConversationUserUserID");
+
+                    b.HasIndex("GroupID");
+
+                    b.ToTable("UserGroup");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -252,6 +338,44 @@ namespace CodedByKay.BondBridge.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.Message", b =>
+                {
+                    b.HasOne("CodedByKay.BondBridge.API.Models.DBModels.Group", "Group")
+                        .WithMany("Messages")
+                        .HasForeignKey("GroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CodedByKay.BondBridge.API.Models.DBModels.ConversationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.UserGroup", b =>
+                {
+                    b.HasOne("CodedByKay.BondBridge.API.Models.DBModels.ConversationUser", "ConversationUser")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("ConversationUserUserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CodedByKay.BondBridge.API.Models.DBModels.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("GroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConversationUser");
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -301,6 +425,18 @@ namespace CodedByKay.BondBridge.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.ConversationUser", b =>
+                {
+                    b.Navigation("UserGroups");
+                });
+
+            modelBuilder.Entity("CodedByKay.BondBridge.API.Models.DBModels.Group", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("UserGroups");
                 });
 #pragma warning restore 612, 618
         }

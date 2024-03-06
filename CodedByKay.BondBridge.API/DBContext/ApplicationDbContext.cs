@@ -12,5 +12,14 @@ namespace CodedByKay.BondBridge.API.DBContext
         }
 
         public DbSet<Log> Logs { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<ConversationUser> ConversationUsers { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
+
+        //Join tables
+        public DbSet<UserGroup> UserGroup { get; set; }
+
+
     }
 }
