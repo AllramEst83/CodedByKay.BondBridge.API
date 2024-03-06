@@ -1,0 +1,53 @@
+﻿User A initiates a chat with User B
+    |
+    |--(User A's Device) Retrieve or Update FCM Token if necessary
+    |       |
+    |       |--(Server Side) Store User A's FCM Token in database
+    |
+    |--(Server Side) Check if User B is active in chat (SignalR connection exists)
+    |       |
+    |       |-- Yes: Use SignalR to send the message to User B in real time
+    |       |       |
+    |       |       |-- User B receives the message through SignalR
+    |       |
+    |       |-- No: Retrieve User B's FCM Token from database
+    |               |
+    |               |-- Use FCM to send a push notification to User B's device
+    |                       |
+    |                       |-- User B receives the notification
+    |                               |
+    |                               |-- User B taps the notification or opens the app
+    |                                       |
+    |                                       |--(User B's Device) App connects to SignalR hub
+    |                                       |       |
+    |                                       |       |-- Retrieve or Update FCM Token if necessary
+    |                                       |               |
+    |                                       |               |--(Server Side) Store User B's FCM Token in database
+    |                                       |
+    |                                       |-- Retrieve message history from server (if needed)
+    |                                       |-- User B is now active in chat
+    |
+User A and User B send messages back and forth
+    |
+    |-- Messages are sent and received in real time via SignalR
+    |       |
+    |       |-- Each message sent checks if the recipient is connected to SignalR
+    |               |
+    |               |-- Yes: Deliver message in real time
+    |               |-- No: Retrieve recipient's FCM Token from database and send a push notification via FCM
+    |
+Chat becomes idle (no activity for a defined period)
+    |
+    |-- Chat session can remain open but is considered inactive
+    |       |
+    |       |-- Any new message initiates a check for user activity
+    |
+User A or User B sends a message after a long period of inactivity
+    |
+    |-- Follow the same logic as initiating a chat
+    |
+Future Enhancements (Sending images, files, audio, emojis)
+    |
+    |-- For non-text content, upload media to a cloud storage and send a link/reference through SignalR
+            |
+            |-- Recipient app fetches the media content from the cloud storage upon receiving the message

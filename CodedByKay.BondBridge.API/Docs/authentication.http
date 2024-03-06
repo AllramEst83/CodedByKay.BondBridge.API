@@ -1,7 +1,7 @@
 @CodedByKay.BondBridge.API_HostAddress = https://localhost:7277
 @refreshToken = <refreshToken>
 @accessToken = <accessToken>
-@customHeader = <custom header value>
+@customHeader = <header>
 
 
 POST {{CodedByKay.BondBridge.API_HostAddress}}/api/Authentication/signin HTTP/1.1
@@ -9,8 +9,9 @@ CodedByKay-BondBridge-header: {{customHeader}}
 Content-Type: application/json
 
 {
-  "email": "<email>",
-  "password": "<password>"
+  "email": "",
+  "password": "",
+  "isApp":true <-- Only use with app signin. When you need a new token for the app--
 }
 ###
 

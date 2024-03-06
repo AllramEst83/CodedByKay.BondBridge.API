@@ -1,0 +1,13 @@
+@CodedByKay.BondBridge.API_HostAddress = https://localhost:7277
+@accessToken = accesstoken
+@groupId = YOUR_GROUP_ID_HERE
+@customHeader = customHeader
+@groupName = groupName
+@memberId = memeberId/userId
+### Get All Groups
+
+
+GET {{CodedByKay.BondBridge.API_HostAddress}}/api/Group/groupsbyuserid/{{memberId}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+CodedByKay-BondBridge-header: {{customHeader}}
+

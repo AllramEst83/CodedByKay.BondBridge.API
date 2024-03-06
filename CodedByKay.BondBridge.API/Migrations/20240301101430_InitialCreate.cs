@@ -50,6 +50,31 @@ namespace CodedByKay.BondBridge.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ConversationUsers",
+                columns: table => new
+                {
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConversationUsers", x => x.UserID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Groups",
+                columns: table => new
+                {
+                    GroupID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GroupName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groups", x => x.GroupID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Logs",
                 columns: table => new
                 {
@@ -172,6 +197,59 @@ namespace CodedByKay.BondBridge.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    MessageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GroupID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.MessageID);
+                    table.ForeignKey(
+                        name: "FK_Messages_ConversationUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "ConversationUsers",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Groups_GroupID",
+                        column: x => x.GroupID,
+                        principalTable: "Groups",
+                        principalColumn: "GroupID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserGroup",
+                columns: table => new
+                {
+                    UserGroupID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    GroupID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConversationUserUserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserGroup", x => x.UserGroupID);
+                    table.ForeignKey(
+                        name: "FK_UserGroup_ConversationUsers_ConversationUserUserID",
+                        column: x => x.ConversationUserUserID,
+                        principalTable: "ConversationUsers",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserGroup_Groups_GroupID",
+                        column: x => x.GroupID,
+                        principalTable: "Groups",
+                        principalColumn: "GroupID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -210,6 +288,26 @@ namespace CodedByKay.BondBridge.API.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_GroupID",
+                table: "Messages",
+                column: "GroupID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_UserID",
+                table: "Messages",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroup_ConversationUserUserID",
+                table: "UserGroup",
+                column: "ConversationUserUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGroup_GroupID",
+                table: "UserGroup",
+                column: "GroupID");
         }
 
         /// <inheritdoc />
@@ -234,10 +332,22 @@ namespace CodedByKay.BondBridge.API.Migrations
                 name: "Logs");
 
             migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "UserGroup");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ConversationUsers");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
         }
     }
 }
